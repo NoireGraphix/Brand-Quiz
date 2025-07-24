@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Brand Discovery Quiz - Noire Graphix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #ccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .tagline {
+            font-size: 1.1em;
+            opacity: 0.9;
+            font-style: italic;
+            color: #ccc;
+        }
+
+        .header p {
+            font-size: 0.95em;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        .quiz-content {
+            padding: 35px;
+            position: relative;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .feedback-message {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+            animation: slideIn 0.5s ease-out;
+            display: none;
+        }
+
+        .feedback-message.show {
+            display: block;
+        }
+
+        .feedback-message h4 {
+            color: #27ae60;
+            margin-bottom: 8px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .feedback-message h4::before {
+            content: "🎯";
+            margin-right: 8px;
+        }
+
+        .feedback-message p {
+            color: #333;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .score-display {
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border: 2px solid #27ae60;
+        }
+
+        .score-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .score-label {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .question {
+            margin-bottom: 35px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #333;
+        }
+
+        .question h3 {
+            font-size: 1.3em;
+            margin-bottom: 18px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-group input, .full-width input {
+            padding: 12px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .full-width input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .full-width textarea:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .color-options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .color-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .color-option:hover {
+            border-color: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(51, 51, 51, 0.1);
+        }
+
+        .color-option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.1);
+            accent-color: #333;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+            align-items: center;
+        }
+
+        .color-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.8);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            border-color: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(51, 51, 51, 0.1);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            margin-top: 2px;
+            transform: scale(1.1);
+            accent-color: #333;
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .option-description {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .vacation-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+        }
+
+        .image-option {
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-option:hover {
+            border-color: #333;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(51, 51, 51, 0.15);
+        }
+
+        .image-option input[type="radio"] {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            transform: scale(1.2);
+            accent-color: #333;
+            z-index: 2;
+        }
+
+        .vacation-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+        }
+
+        .vacation-image.error {
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .vacation-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .vacation-desc {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 35px auto 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 26, 26, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .cta-text {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-left: 4px solid #27ae60;
+            text-align: center;
+        }
+
+        .cta-text h4 {
+            color: #27ae60;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .cta-text p {
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .timeline-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #856404;
+            text-align: center;
+        }
+
+        .timeline-note strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #b8860b;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .quiz-content {
+                padding: 25px 20px;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .vacation-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .vacation-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Free Brand Discovery</h1>
+            <div class="tagline">Passion Meets Purpose</div>
+            <p>Get your personalized brand strategy & custom quote from Noire Graphix</p>
+            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; border-left: 3px solid #27ae60;">
+                <p style="font-style: italic; margin: 0; font-size: 0.9em; opacity: 0.9;">"This quiz helped me discover exactly what my brand needed! The insights were spot-on and led to amazing results." - Sarah K., Wellness Coach</p>
+            </div>
+            <div style="margin-top: 15px; font-size: 0.85em; opacity: 0.8;">
+                <span style="color: #4CAF50;">✓</span> Join 280+ businesses who've transformed their brand identity
+            </div>
+        </div>
+
+        <div class="quiz-content">
+            <div class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">8</span></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <form id="brandQuiz">
+                <!-- No action needed for EmailJS -->
+                <!-- Contact Information -->
+                <div class="question">
+                    <h3>Let's connect! Tell us about yourself:</h3>
+                    <div class="input-group">
+                        <input type="text" name="client_name" placeholder="Your Name" required>
+                        <input type="email" name="client_email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" name="business_name" placeholder="Business Name" required>
+                        <input type="tel" name="phone_number" placeholder="Phone Number (optional)">
+                    </div>
+                </div>
+
+                <!-- Combined Business Type & Industry -->
+                <div class="question">
+                    <h3>What type of business are you in?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="business_industry" value="health_wellness_service" required>
+                            <div class="option-content">
+                                <div class="option-title">Health & Wellness Services</div>
+                                <div class="option-description">Fitness coach, nutritionist, therapist, spa, yoga studio</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="business_industry" value="beauty_fashion_business">
+                            <div class="option-content">
+                                <div class="option-title">Beauty & Fashion</div>
+                                <div class="option-description">Salon, cosmetics, clothing brand, jewelry, accessories</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="business_industry" value="food_beverage_business">
+                            <div class="option-content">
+                                <div class="option-title">Food & Beverage</div>
+                                <div class="option-description">Restaurant, catering, food truck, bakery, coffee shop</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="business_industry" value="creative_professional">
+                            <div class="option-content">
+                                <div class="option-title">Creative Professional</div>
+                                <div class="option-description">Photographer, designer, artist, writer, content creator</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="business_industry" value="business_professional">
+                            <div class="option-content">
+                                <div class="option-title">Business & Professional Services</div>
+                                <div class="option-description">Consultant, coach, real estate, finance, legal, tech</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="business_industry" value="retail_ecommerce">
+                            <div class="option-content">
+                                <div class="option-title">Retail & E-commerce</div>
+                                <div class="option-description">Online store, handmade products, retail shop</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="business_industry" value="education_training">
+                            <div class="option-content">
+                                <div class="option-title">Education & Training</div>
+                                <div class="option-description">Online courses, tutoring, workshop leader, trainer</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="business_industry" value="other_industry">
+                            <div class="option-content">
+                                <div class="option-title">Other Industry</div>
+                                <div class="option-description">Tell us about your unique business</div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="feedback-message" id="industryFeedback">
+                        <h4>Great Choice!</h4>
+                        <p id="industryInsight"></p>
+                    </div>
+                </div>
+
+                <!-- Vacation Style (Brand Personality) -->
+                <div class="question">
+                    <h3>Your dream weekend getaway looks like:</h3>
+                    <div class="vacation-options">
+                        <label class="image-option">
+                            <input type="radio" name="brand_vibe" value="sophisticated" required>
+                            <img src="https://images.pexels.com/photos/1407846/pexels-photo-1407846.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop" alt="Wine Country Vineyard" class="vacation-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="vacation-image error" style="display:none;">🍷 Wine Country</div>
+                            <div class="vacation-title">Wine Country</div>
+                            <div class="vacation-desc">Boutique hotels, fine dining, elegant experiences</div>
+                        </label>
+                        <label class="image-option">
+                            <input type="radio" name="brand_vibe" value="fun">
+                            <img src="https://images.pexels.com/photos/236511/pexels-photo-236511.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop" alt="Ferris Wheel" class="vacation-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="vacation-image error" style="display:none;">🎡 Theme Park</div>
+                            <div class="vacation-title">Theme Park Fun</div>
+                            <div class="vacation-desc">Rides, games, family joy, playful energy</div>
+                        </label>
+                        <label class="image-option">
+                            <input type="radio" name="brand_vibe" value="luxury">
+                            <img src="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop" alt="Luxury Resort" class="vacation-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="vacation-image error" style="display:none;">🏝️ Luxury Resort</div>
+                            <div class="vacation-title">Luxury Resort</div>
+                            <div class="vacation-desc">Overwater bungalows, spa treatments, premium service</div>
+                        </label>
+                        <label class="image-option">
+                            <input type="radio" name="brand_vibe" value="urban">
+                            <img src="https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop" alt="Rooftop Bar" class="vacation-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="vacation-image error" style="display:none;">🏙️ Rooftop Bar</div>
+                            <div class="vacation-title">City Exploration</div>
+                            <div class="vacation-desc">Museums, rooftop bars, urban adventures</div>
+                        </label>
+                        <label class="image-option">
+                            <input type="radio" name="brand_vibe" value="cozy">
+                            <img src="https://images.pexels.com/photos/618833/pexels-photo-618833.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop" alt="Cozy Cabin" class="vacation-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="vacation-image error" style="display:none;">🏡 Cozy Cabin</div>
+                            <div class="vacation-title">Cozy Cabin</div>
+                            <div class="vacation-desc">Mountain retreat, friends, bonfires, comfort</div>
+                        </label>
+                        <label class="image-option">
+                            <input type="radio" name="brand_vibe" value="adventure">
+                            <img src="https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop" alt="Mountain Adventure" class="vacation-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="vacation-image error" style="display:none;">⛰️ Adventure</div>
+                            <div class="vacation-title">Adventure Trip</div>
+                            <div class="vacation-desc">Hiking, extreme sports, adrenaline rush</div>
+                        </label>
+                    </div>
+                    <div class="feedback-message" id="vibeFeedback">
+                        <h4>Perfect Choice!</h4>
+                        <p id="vibeInsight"></p>
+                    </div>
+                </div>
+
+                <!-- Current Biggest Challenge -->
+                <div class="question">
+                    <h3>What's your biggest brand challenge right now?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="main_challenge" value="no_logo" required>
+                            <div class="option-content">
+                                <div class="option-title">I need a professional logo</div>
+                                <div class="option-description">Starting from scratch or replacing an amateur design</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="main_challenge" value="inconsistent_branding">
+                            <div class="option-content">
+                                <div class="option-title">My branding feels scattered</div>
+                                <div class="option-description">Need cohesive colors, fonts, and style across everything</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="main_challenge" value="marketing_materials">
+                            <div class="option-content">
+                                <div class="option-title">I need marketing templates</div>
+                                <div class="option-description">Business cards, social media posts, flyers</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="main_challenge" value="complete_rebrand">
+                            <div class="option-content">
+                                <div class="option-title">Complete brand makeover</div>
+                                <div class="option-description">Ready for a full professional brand identity system</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Color Preferences -->
+                <div class="question">
+                    <h3>Which color palette speaks to your brand?</h3>
+                    <div class="color-options">
+                        <label class="color-option">
+                            <input type="radio" name="colors" value="classic" required>
+                            <div class="color-palette">
+                                <div class="color-swatch" style="background: #000000;"></div>
+                                <div class="color-swatch" style="background: #ffffff; border-color: #ddd;"></div>
+                                <div class="color-swatch" style="background: #808080;"></div>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-title">Classic Neutrals</div>
+                                <div class="option-description">Black, white, gray - timeless and versatile</div>
+                            </div>
+                        </label>
+                        <label class="color-option">
+                            <input type="radio" name="colors" value="earth">
+                            <div class="color-palette">
+                                <div class="color-swatch" style="background: #8B4513;"></div>
+                                <div class="color-swatch" style="background: #228B22;"></div>
+                                <div class="color-swatch" style="background: #DEB887;"></div>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-title">Warm Earth Tones</div>
+                                <div class="option-description">Browns, greens, warm beiges - natural and grounding</div>
+                            </div>
+                        </label>
+                        <label class="color-option">
+                            <input type="radio" name="colors" value="vibrant">
+                            <div class="color-palette">
+                                <div class="color-swatch" style="background: #1E90FF;"></div>
+                                <div class="color-swatch" style="background: #FF4500;"></div>
+                                <div class="color-swatch" style="background: #FFD700;"></div>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-title">Bold & Vibrant</div>
+                                <div class="option-description">Bright blues, reds, oranges - energetic and eye-catching</div>
+                            </div>
+                        </label>
+                        <label class="color-option">
+                            <input type="radio" name="colors" value="pastels">
+                            <div class="color-palette">
+                                <div class="color-swatch" style="background: #FFB6C1;"></div>
+                                <div class="color-swatch" style="background: #87CEEB;"></div>
+                                <div class="color-swatch" style="background: #DDA0DD;"></div>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-title">Soft Pastels</div>
+                                <div class="option-description">Light pinks, blues, lavenders - gentle and approachable</div>
+                            </div>
+                        </label>
+                        <label class="color-option">
+                            <input type="radio" name="colors" value="jewel">
+                            <div class="color-palette">
+                                <div class="color-swatch" style="background: #50C878;"></div>
+                                <div class="color-swatch" style="background: #0F52BA;"></div>
+                                <div class="color-swatch" style="background: #800020;"></div>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-title">Rich Jewel Tones</div>
+                                <div class="option-description">Deep emeralds, sapphires, burgundy - luxurious and premium</div>
+                            </div>
+                        </label>
+                        <label class="color-option">
+                            <input type="radio" name="colors" value="monochrome">
+                            <div class="color-palette">
+                                <div class="color-swatch" style="background: #4169E1;"></div>
+                                <div class="color-swatch" style="background: #6495ED;"></div>
+                                <div class="color-swatch" style="background: #87CEEB;"></div>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-title">Single Color Focus</div>
+                                <div class="option-description">One main color in various shades - clean and cohesive</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Brand Usage Context -->
+                <div class="question">
+                    <h3>Where will you primarily use your brand?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="brand_usage" value="social_media" required>
+                            <div class="option-content">
+                                <div class="option-title">Social Media Focus</div>
+                                <div class="option-description">Instagram, Facebook, TikTok, LinkedIn posts and stories</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="brand_usage" value="print_materials">
+                            <div class="option-content">
+                                <div class="option-title">Print Materials</div>
+                                <div class="option-description">Business cards, flyers, brochures, signage</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="brand_usage" value="website_digital">
+                            <div class="option-content">
+                                <div class="option-title">Website & Digital</div>
+                                <div class="option-description">Website headers, email signatures, digital presentations</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="brand_usage" value="packaging_products">
+                            <div class="option-content">
+                                <div class="option-title">Product Packaging</div>
+                                <div class="option-description">Labels, boxes, tags, product branding</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="brand_usage" value="everything">
+                            <div class="option-content">
+                                <div class="option-title">Everything!</div>
+                                <div class="option-description">Complete brand presence across all platforms and materials</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Additional Business Needs -->
+                <div class="question">
+                    <h3>Tell us more about your business/project needs (optional):</h3>
+                    <div class="full-width">
+                        <textarea name="additional_needs" placeholder="Anything else we should know? Special requirements, industry-specific needs, timeline concerns, or other services you're interested in..." rows="4" style="width: 100%; padding: 12px; border: 2px solid #e0e6ed; border-radius: 8px; font-size: 1em; font-family: inherit; resize: vertical; transition: border-color 0.3s ease;"></textarea>
+                    </div>
+                </div>
+
+                <!-- Timeline & Investment Level Combined -->
+                <div class="question">
+                    <h3>What's your timeline and investment level?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="timeline_budget" value="foundation_express" required>
+                            <div class="option-content">
+                                <div class="option-title">Essential Start - Express (3-5 days)</div>
+                                <div class="option-description">Logo + business cards to establish professional credibility quickly</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="timeline_budget" value="foundation_standard">
+                            <div class="option-content">
+                                <div class="option-title">Essential Start - Standard (1-2 weeks)</div>
+                                <div class="option-description">Logo + business cards with standard timeline</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="timeline_budget" value="growth_rush">
+                            <div class="option-content">
+                                <div class="option-title">Growth Package - Rush (5-7 days)</div>
+                                <div class="option-description">Complete brand system with marketing templates - expedited</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="timeline_budget" value="growth_standard">
+                            <div class="option-content">
+                                <div class="option-title">Growth Package - Standard (2-3 weeks)</div>
+                                <div class="option-description">Complete brand system with marketing templates and guidelines</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="timeline_budget" value="premium_rush">
+                            <div class="option-content">
+                                <div class="option-title">Premium Experience - Rush (1-2 weeks)</div>
+                                <div class="option-description">Full brand identity system with all materials - expedited</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="timeline_budget" value="premium_standard">
+                            <div class="option-content">
+                                <div class="option-title">Premium Experience - Standard (3-4 weeks)</div>
+                                <div class="option-description">Complete brand identity system with all marketing materials</div>
+                            </div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="timeline_budget" value="custom_exploring">
+                            <div class="option-content">
+                                <div class="option-title">Custom Solution - Just Exploring</div>
+                                <div class="option-description">Let's create something tailored - gathering information for future planning</div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="timeline-note">
+                        <strong>📅 Please Note:</strong>
+                        These are estimated timelines based on project complexity and our current workload. Actual delivery may vary depending on revisions, feedback response time, and specific requirements. We'll confirm exact timelines in your custom quote.
+                    </div>
+                </div>
+
+                <!-- Hidden field for insights -->
+                <input type="hidden" name="brand_insights" id="hiddenInsights">
+                
+                <!-- Brand Readiness Score -->
+                <div class="score-display" id="scoreDisplay" style="display: none;">
+                    <div class="score-number" id="scoreNumber">0</div>
+                    <div class="score-label">Brand Readiness Score</div>
+                    <div class="score-description" id="scoreDescription">Complete the quiz to unlock your personalized brand strategy!</div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitButton">🎯 Get My Custom Brand Quote</button>
+
+                <div class="cta-text">
+                    <h4>What happens next?</h4>
+                    <p>You'll receive a personalized brand strategy and custom quote from Noire Graphix within 1-3 business days. Plus, we'll include specific recommendations for your business type and style preferences!</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS with your public key
+        emailjs.init('DmSGzmCzhSUu4g35_');
+        
+        // Industry feedback messages
+        const industryFeedback = {
+            'health_wellness_service': 'Perfect! Health & wellness brands thrive with clean, trustworthy designs that convey credibility and peace of mind. We\'ll focus on calming colors and professional aesthetics.',
+            'beauty_fashion_business': 'Excellent choice! Beauty & fashion brands need stylish, trendy aesthetics with attention to visual appeal. We\'ll create something that reflects current trends while being timeless.',
+            'food_beverage_business': 'Great! Food & beverage brands need appetizing colors and designs that make people hungry. We\'ll focus on warm, inviting aesthetics that reflect your cuisine style.',
+            'creative_professional': 'Love it! Creative professionals need unique, artistic branding that showcases their creativity and personal style. We\'ll design something that reflects your artistic vision.',
+            'business_professional': 'Smart choice! Professional services need authoritative, trustworthy branding that builds credibility. We\'ll create something sophisticated and reliable.',
+            'retail_ecommerce': 'Perfect! Retail brands need eye-catching, memorable designs that stand out online and on packaging. We\'ll focus on creating strong brand recognition.',
+            'education_training': 'Excellent! Education brands need approachable, professional designs that convey expertise while being accessible. We\'ll balance authority with friendliness.',
+            'other_industry': 'Interesting! We love working with unique businesses. We\'ll create a custom approach tailored specifically to your industry and needs.'
+        };
+
+        // Brand vibe feedback messages
+        const vibeFeedback = {
+            'sophisticated': 'Perfect choice! Wine country sophistication translates beautifully to elegant, refined branding. We\'ll focus on premium typography and sophisticated color palettes that reflect your discerning taste.',
+            'fun': 'Love it! Theme park energy means your brand should be vibrant and engaging. We\'ll design something playful and memorable that captures that joyful, family-friendly spirit.',
+            'luxury': 'Excellent! Resort luxury demands the highest level of brand sophistication. We\'ll create an exclusive, premium aesthetic with gold accents and high-end finishes that command top pricing.',
+            'urban': 'Great pick! City exploration vibes call for sleek, modern branding with metropolitan edge. We\'ll design something contemporary that resonates with urban, trend-conscious audiences.',
+            'cozy': 'Wonderful! Cabin coziness translates to warm, welcoming brand design. We\'ll create something that feels like home - approachable, friendly, and authentic with earthy, comfortable aesthetics.',
+            'adventure': 'Awesome! Mountain adventure energy needs bold, dynamic branding that inspires action. We\'ll design something rugged yet refined that motivates your audience and reflects your adventurous spirit.'
+        };
+
+        // Brand readiness scoring
+        function calculateBrandScore() {
+            const questions = document.querySelectorAll('.question');
+            let totalPoints = 0;
+            let maxPoints = 0;
+
+            questions.forEach((question) => {
+                const inputs = question.querySelectorAll('input[required]');
+                const hasRequiredAnswer = Array.from(inputs).some(input => {
+                    if (input.type === 'radio') {
+                        const radioGroup = document.querySelectorAll(`input[name="${input.name}"]`);
+                        return Array.from(radioGroup).some(radio => radio.checked);
+                    }
+                    return input.value.trim() !== '';
+                });
+                
+                if (hasRequiredAnswer) {
+                    totalPoints += 10;
+                }
+                maxPoints += 10;
+            });
+
+            // Bonus points for optional fields
+            const businessName = document.querySelector('input[name="business_name"]').value.trim();
+            const phoneNumber = document.querySelector('input[name="phone_number"]').value.trim();
+            const additionalNeeds = document.querySelector('textarea[name="additional_needs"]').value.trim();
+            
+            if (businessName) totalPoints += 5;
+            if (phoneNumber) totalPoints += 3;
+            if (additionalNeeds) totalPoints += 7;
+            
+            maxPoints += 15; // Total possible bonus points
+
+            return Math.round((totalPoints / maxPoints) * 100);
+        }
+
+        function updateBrandScore() {
+            const score = calculateBrandScore();
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const scoreNumber = document.getElementById('scoreNumber');
+            const scoreDescription = document.getElementById('scoreDescription');
+            
+            if (score >= 80) {
+                scoreDisplay.style.display = 'block';
+                scoreNumber.textContent = score;
+                scoreDescription.textContent = '🏆 Excellent! You\'re ready for a complete brand transformation. We can\'t wait to bring your vision to life!';
+            } else if (score >= 60) {
+                scoreDisplay.style.display = 'block';
+                scoreNumber.textContent = score;
+                scoreDescription.textContent = '🌟 Great start! You have a clear direction. Let\'s refine your brand strategy together!';
+            } else if (score >= 40) {
+                scoreDisplay.style.display = 'block';
+                scoreNumber.textContent = score;
+                scoreDescription.textContent = '💡 Good foundation! We\'ll help you discover and develop your unique brand identity.';
+            }
+        }
+
+        // Progress tracking
+        function updateProgress() {
+            const totalQuestions = 8;
+            const questions = document.querySelectorAll('.question');
+            let answeredQuestions = 0;
+            
+            questions.forEach((question, index) => {
+                const inputs = question.querySelectorAll('input[required]');
+                const hasAnswer = Array.from(inputs).some(input => {
+                    if (input.type === 'radio') {
+                        const radioGroup = document.querySelectorAll(`input[name="${input.name}"]`);
+                        return Array.from(radioGroup).some(radio => radio.checked);
+                    }
+                    return input.value.trim() !== '';
+                });
+                
+                if (hasAnswer) {
+                    answeredQuestions++;
+                }
+            });
+            
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('currentQuestion').textContent = Math.min(answeredQuestions + 1, totalQuestions);
+            
+            // Update brand score
+            updateBrandScore();
+            
+            // Update submit button text based on progress
+            const submitBtn = document.getElementById('submitButton');
+            if (progress === 100) {
+                submitBtn.innerHTML = '🎯 Unlock My Brand Strategy & Quote';
+            }
+        }
+
+        // Add event listeners to all form inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const allInputs = document.querySelectorAll('input, textarea');
+            allInputs.forEach(input => {
+                input.addEventListener('change', updateProgress);
+                input.addEventListener('input', updateProgress);
+            });
+            
+            // Special handler for industry feedback
+            const industryInputs = document.querySelectorAll('input[name="business_industry"]');
+            industryInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.checked) {
+                        const feedbackDiv = document.getElementById('industryFeedback');
+                        const insightText = document.getElementById('industryInsight');
+                        
+                        insightText.textContent = industryFeedback[this.value];
+                        feedbackDiv.classList.add('show');
+                        
+                        // Scroll to feedback smoothly
+                        setTimeout(() => {
+                            feedbackDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }, 100);
+                    }
+                });
+            });
+            
+            // Special handler for brand vibe feedback
+            const brandVibeInputs = document.querySelectorAll('input[name="brand_vibe"]');
+            brandVibeInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.checked) {
+                        const feedbackDiv = document.getElementById('vibeFeedback');
+                        const insightText = document.getElementById('vibeInsight');
+                        
+                        insightText.textContent = vibeFeedback[this.value];
+                        feedbackDiv.classList.add('show');
+                        
+                        // Scroll to feedback smoothly
+                        setTimeout(() => {
+                            feedbackDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }, 100);
+                    }
+                });
+            });
+            
+            // Initial progress update
+            updateProgress();
+        });
+
+        document.getElementById('brandQuiz').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            const formData = new FormData(this);
+            const results = {};
+            
+            // Collect responses
+            for (let [key, value] of formData.entries()) {
+                results[key] = value;
+            }
+            
+            // Generate insights
+            let insights = generateBrandInsights(results, formData.get('client_name'), formData.get('business_name'));
+            
+            // Prepare email template parameters
+            const templateParams = {
+                client_name: formData.get('client_name'),
+                client_email: formData.get('client_email'),
+                business_name: formData.get('business_name'),
+                phone_number: formData.get('phone_number') || 'Not provided',
+                business_industry: formData.get('business_industry'),
+                brand_vibe: formData.get('brand_vibe'),
+                main_challenge: formData.get('main_challenge'),
+                colors: formData.get('colors'),
+                brand_usage: formData.get('brand_usage'),
+                additional_needs: formData.get('additional_needs') || 'None specified',
+                timeline_budget: formData.get('timeline_budget'),
+                brand_insights: insights,
+                brand_score: calculateBrandScore()
+            };
+            
+            // Update button
+            const submitBtn = this.querySelector('.submit-btn');
+            submitBtn.innerHTML = '🚀 Sending Your Results...';
+            submitBtn.disabled = true;
+            
+            // Send email via EmailJS - FULLY CONFIGURED
+            emailjs.send('service_gl4g6yx', 'template_uh0quwn', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    submitBtn.innerHTML = '✅ Quiz Submitted Successfully!';
+                    
+                    // Optional: Show success message
+                    alert('Thank you! Your brand discovery results have been sent. We\'ll get back to you within 1-3 business days with your custom quote!');
+                    
+                    // Optional: Reset form or redirect
+                    // window.location.href = 'https://your-thank-you-page.com';
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    submitBtn.innerHTML = '❌ Error - Please Try Again';
+                    submitBtn.disabled = false;
+                    alert('Oops! There was an error submitting your quiz. Please try again or contact us directly at noiregraphix@gmail.com');
+                });
+        });
+
+        function generateBrandInsights(data, clientName, businessName) {
+            let insights = `🎯 BRAND DISCOVERY RESULTS FOR ${clientName.toUpperCase()}\n`;
+            if (businessName) insights += `Business: ${businessName}\n`;
+            insights += `Generated: ${new Date().toLocaleDateString()}\n`;
+            insights += `Brand Readiness Score: ${calculateBrandScore()}/100\n\n`;
+            
+            // Industry-specific recommendations
+            if (data.business_industry) {
+                insights += `BUSINESS TYPE: ${data.business_industry.replace(/_/g, ' ')}\n`;
+                
+                const industryRecs = {
+                    'health_wellness_service': 'Clean, trustworthy design with calming colors. Focus on credibility and wellness.',
+                    'beauty_fashion_business': 'Stylish, trendy aesthetics with attention to visual appeal and luxury feel.',
+                    'food_beverage_business': 'Appetizing colors, warm design that makes people hungry for your offerings.',
+                    'creative_professional': 'Unique, artistic approach that showcases creativity and personal style.',
+                    'business_professional': 'Professional, authoritative design that builds trust and credibility.',
+                    'retail_ecommerce': 'Eye-catching, memorable branding that stands out online and on packaging.',
+                    'education_training': 'Approachable, professional design that conveys expertise and accessibility.',
+                    'other_industry': 'Custom approach tailored to your specific industry needs.'
+                };
+                insights += `Industry Focus: ${industryRecs[data.business_industry]}\n\n`;
+            }
+            
+            // Brand vibe analysis
+            if (data.brand_vibe) {
+                insights += `BRAND PERSONALITY: ${data.brand_vibe}\n`;
+                
+                const vibeRecs = {
+                    'sophisticated': 'Wine country elegance - refined typography, sophisticated color palette, premium positioning',
+                    'fun': 'Theme park energy - playful fonts, bright colors, joyful and engaging design',
+                    'luxury': 'Resort luxury - high-end aesthetics, gold/premium accents, exclusive feel',
+                    'urban': 'City exploration - modern, sleek design with metropolitan sophistication',
+                    'cozy': 'Cabin comfort - warm colors, friendly fonts, approachable and authentic feel',
+                    'adventure': 'Mountain adventure - bold, dynamic design with rugged energy'
+                };
+                insights += `Design Direction: ${vibeRecs[data.brand_vibe]}\n\n`;
+            }
+
+            // Usage context recommendations
+            if (data.brand_usage) {
+                insights += `PRIMARY USAGE: ${data.brand_usage.replace(/_/g, ' ')}\n`;
+                
+                const usageRecs = {
+                    'social_media': 'Optimized for digital platforms with strong visual impact at small sizes',
+                    'print_materials': 'High-resolution designs that work well in print and maintain quality',
+                    'website_digital': 'Web-optimized graphics with scalable vector formats',
+                    'packaging_products': 'Designs that work on various package sizes and materials',
+                    'everything': 'Comprehensive brand system that works across all mediums'
+                };
+                insights += `Focus: ${usageRecs[data.brand_usage]}\n\n`;
+            }
+
+            // Timeline and budget considerations
+            if (data.timeline_budget) {
+                insights += `PACKAGE & TIMELINE: ${data.timeline_budget.replace(/_/g, ' ')}\n`;
+                
+                const packageRecs = {
+                    'foundation_express': 'Foundation Package ($25-50) - EXPRESS delivery 3-5 days. Logo + business cards.',
+                    'foundation_standard': 'Foundation Package ($25-50) - Standard 1-2 weeks. Logo + business cards.',
+                    'growth_rush': 'Growth Package ($109+) - RUSH delivery 5-7 days. Complete brand system expedited.',
+                    'growth_standard': 'Growth Package ($109+) - MOST POPULAR. Standard 2-3 weeks timeline.',
+                    'premium_rush': 'Premium Package ($189+) - RUSH delivery 1-2 weeks. Full brand identity expedited.',
+                    'premium_standard': 'Premium Package ($189+) - COMPLETE TRANSFORMATION. 3-4 weeks standard.',
+                    'custom_exploring': 'Custom Solution - Exploring phase. Perfect time to plan your ideal brand.'
+                };
+                insights += `Recommendation: ${packageRecs[data.timeline_budget]}\n\n`;
+            }
+            
+            // Challenge-based recommendations
+            if (data.main_challenge) {
+                insights += `PRIMARY CHALLENGE: ${data.main_challenge.replace(/_/g, ' ')}\n`;
+                
+                const challengeRecs = {
+                    'no_logo': 'Priority: Professional logo design that establishes credibility',
+                    'inconsistent_branding': 'Priority: Brand guidelines and cohesive visual system',
+                    'marketing_materials': 'Priority: Template suite for consistent marketing materials',
+                    'complete_rebrand': 'Priority: Full brand identity transformation and positioning'
+                };
+                insights += `Focus Area: ${challengeRecs[data.main_challenge]}\n\n`;
+            }
+            
+            insights += `🎯 NEXT STEPS:\n`;
+            insights += `1. Custom quote with specific recommendations\n`;
+            insights += `2. Mood board creation based on style preferences\n`;
+            insights += `3. Logo concepts that reflect brand personality\n`;
+            insights += `4. Complete brand guidelines for consistency\n\n`;
+            
+            insights += `📞 CONTACT: noiregraphix@gmail.com | WhatsApp: (250) 289-9025`;
+            
+            return insights;
+        }
+    </script>
+</body>
+</html>
