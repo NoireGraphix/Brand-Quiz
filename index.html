@@ -450,7 +450,7 @@
                 <p style="font-style: italic; margin: 0; font-size: 0.9em; opacity: 0.9;">"This quiz helped me discover exactly what my brand needed! The insights were spot-on and led to amazing results." - Sarah K., Wellness Coach</p>
             </div>
             <div style="margin-top: 15px; font-size: 0.85em; opacity: 0.8;">
-                <span style="color: #4CAF50;">✓</span> Join 280+ businesses who've transformed their brand identity
+                <span style="color: #4CAF50;">✓</span> Trusted by small businesses who value authentic brand identity
             </div>
         </div>
 
@@ -1036,7 +1036,15 @@
                 additional_needs: formData.get('additional_needs') || 'None specified',
                 timeline_budget: formData.get('timeline_budget'),
                 brand_insights: insights,
-                brand_score: calculateBrandScore()
+                brand_score: calculateBrandScore(),
+                // Additional formatted fields for better email display
+                timeline: formatTimelineBudget(formData.get('timeline_budget')),
+                submission_date: new Date().toLocaleDateString() + ' at ' + new Date().toLocaleTimeString(),
+                industry_formatted: formatIndustry(formData.get('business_industry')),
+                vibe_formatted: formatVibe(formData.get('brand_vibe')),
+                challenge_formatted: formatChallenge(formData.get('main_challenge')),
+                colors_formatted: formatColors(formData.get('colors')),
+                usage_formatted: formatUsage(formData.get('brand_usage'))
             };
             
             // Update button
@@ -1153,6 +1161,79 @@
             insights += `📞 CONTACT: noiregraphix@gmail.com | WhatsApp: (250) 289-9025`;
             
             return insights;
+        }
+
+        // Helper functions to format data for email display
+        function formatTimelineBudget(value) {
+            const timelineMap = {
+                'foundation_express': 'Essential Start - Express (3-5 days)',
+                'foundation_standard': 'Essential Start - Standard (1-2 weeks)',
+                'growth_rush': 'Growth Package - Rush (5-7 days)',
+                'growth_standard': 'Growth Package - Standard (2-3 weeks)',
+                'premium_rush': 'Premium Experience - Rush (1-2 weeks)',
+                'premium_standard': 'Premium Experience - Standard (3-4 weeks)',
+                'custom_exploring': 'Custom Solution - Just Exploring'
+            };
+            return timelineMap[value] || value;
+        }
+
+        function formatIndustry(value) {
+            const industryMap = {
+                'health_wellness_service': 'Health & Wellness Services',
+                'beauty_fashion_business': 'Beauty & Fashion',
+                'food_beverage_business': 'Food & Beverage',
+                'creative_professional': 'Creative Professional',
+                'business_professional': 'Business & Professional Services',
+                'retail_ecommerce': 'Retail & E-commerce',
+                'education_training': 'Education & Training',
+                'other_industry': 'Other Industry'
+            };
+            return industryMap[value] || value;
+        }
+
+        function formatVibe(value) {
+            const vibeMap = {
+                'sophisticated': 'Sophisticated (Wine Country)',
+                'fun': 'Fun & Playful (Theme Park)',
+                'luxury': 'Luxury (Resort)',
+                'urban': 'Urban & Modern (City)',
+                'cozy': 'Cozy & Warm (Cabin)',
+                'adventure': 'Adventure & Bold (Mountain)'
+            };
+            return vibeMap[value] || value;
+        }
+
+        function formatChallenge(value) {
+            const challengeMap = {
+                'no_logo': 'Need a professional logo',
+                'inconsistent_branding': 'Branding feels scattered',
+                'marketing_materials': 'Need marketing templates',
+                'complete_rebrand': 'Complete brand makeover'
+            };
+            return challengeMap[value] || value;
+        }
+
+        function formatColors(value) {
+            const colorMap = {
+                'classic': 'Classic Neutrals (Black, White, Gray)',
+                'earth': 'Warm Earth Tones (Browns, Greens)',
+                'vibrant': 'Bold & Vibrant (Blues, Reds, Oranges)',
+                'pastels': 'Soft Pastels (Pinks, Blues, Lavenders)',
+                'jewel': 'Rich Jewel Tones (Emeralds, Sapphires)',
+                'monochrome': 'Single Color Focus'
+            };
+            return colorMap[value] || value;
+        }
+
+        function formatUsage(value) {
+            const usageMap = {
+                'social_media': 'Social Media Focus',
+                'print_materials': 'Print Materials',
+                'website_digital': 'Website & Digital',
+                'packaging_products': 'Product Packaging',
+                'everything': 'Everything!'
+            };
+            return usageMap[value] || value;
         }
     </script>
 </body>
